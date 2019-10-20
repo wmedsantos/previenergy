@@ -15,6 +15,7 @@
 
   <!-- Custom styles for this template -->
   <link href="css/simple-sidebar.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://apis.google.com/js/api.js"></script>
   
 <script>
@@ -53,6 +54,11 @@
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
                 console.log("Response", response);
+                text = "";
+                foreach (result in response.result){
+                    text += result.alternatives[0].transcript;
+                }
+                $('#speach').text(text);
               },
               function(err) { console.error("Execute error", err); });
   }
@@ -114,12 +120,16 @@
       </nav>
 
       <div class="container-fluid">
-        <h1 class="mt-4">Simple Sidebar</h1>
-        <button onclick="authenticate().then(loadClient)">authorize</button>
-         <button onclick="execute('positivomono3.wav')">Sense 1st Call</button>
-         <button onclick="execute('negativomono3.wav')">Sense 2st Call</button>
-        <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
+        <h1 class="mt-4">Análise de Satisfação do Cliente</h1>
+        <button onclick="authenticate().then(loadClient)">Login</button>
+        <a href="gs://prevenergycalls/positivomono3.wav">Ouvir</a>
+         <button onclick="execute('positivomono3.wav')"> Primeira ligação</button>
+         <a href="gs://prevenergycalls/negativomono3.wav">Ouvir</a>
+         <button onclick="execute('negativomono3.wav')">Segunda ligação</button>        
+      </div>
+      <div class="container-fluid">
+        <label></label>
+        <input type="text" class="form-control" id="speach" style="height: 50px;">
       </div>
     </div>
     <!-- /#page-content-wrapper -->
