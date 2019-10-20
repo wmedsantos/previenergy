@@ -53,12 +53,21 @@
     })
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
-                console.log("Response", response);
+                console.log("ResponseSpeach", response);
                 text = "";
                 for( let result in response.result.results){
                     text += response.result.results[result].alternatives[0].transcript;
                 }
                 $('#speach').val(text);
+                return gapi.client.language.documents.analyzeSentiment({                      
+                      'document': {
+                                'type': 'PLAIN_TEXT',
+                                'content': text
+                            }
+                    }).then(function(response){
+                      console.log("ResponseSense", response);
+                    });
+                 
               },
               function(err) { console.error("Execute error", err); });
   }
