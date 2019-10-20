@@ -58,7 +58,7 @@
                 for( let result in response.result.results){
                     text += response.result.results[result].alternatives[0].transcript;
                 }
-                $('#speach').text(text);
+                $('#speach').val(text);
               },
               function(err) { console.error("Execute error", err); });
   }
