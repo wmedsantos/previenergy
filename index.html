@@ -71,17 +71,18 @@
 
       <div class="container-fluid">
         <h1 class="mt-4">Análise de Satisfação do Cliente</h1>
-        <button onclick="authenticate().then(loadClient)">Login</button>
+        <br>
         <img src="/img/play_arrow-24px.svg" onclick="play_audio('play','.positivo')">
         <img src="/img/pause-24px.svg" onclick="play_audio('pause','.positivo')">
-         <button onclick="execute('positivomono3.wav')"> Primeira ligação</button>
+         <button onclick="execute('positivomono3.wav')"> Primeira ligação</button><br>
          <img src="/img/play_arrow-24px.svg" onclick="play_audio('play','.negativo')">
         <img src="/img/pause-24px.svg" onclick="play_audio('pause','.negativo')">
          <button onclick="execute('negativomono3.wav')">Segunda ligação</button>        
       </div>
       <div class="container-fluid">
-        <label></label>
+        <label>Voz capturada</label>
         <input type="text" class="form-control" id="speach" style="height: 50px;">
+        <label>Receptividade do cliente</label>
         <img src="/img/sentiment_satisfied-24px.svg" id="imgSense" style="width: 50px;height: 50px;" >
       </div>
     </div>
