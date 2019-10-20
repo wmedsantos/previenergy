@@ -31,7 +31,7 @@
               function(err) { console.error("Error signing in", err); });
   }
   function loadClient() {
-    gapi.client.setApiKey("AIzaSyDDzFvAmbvlBg9vW0o7KVxPGjhYRsMNfms");
+    gapi.client.setApiKey("cMyQ-5YTw2PcV5MwuS9TfUAE");
     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/speech/v1p1beta1/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
               function(err) { console.error("Error loading GAPI client for API", err); });
@@ -57,7 +57,7 @@
               function(err) { console.error("Execute error", err); });
   }
   gapi.load("client:auth2", function() {
-    gapi.auth2.init({client_id: "107816601006709330681"});
+    gapi.auth2.init({client_id: "332105167058-56k3dq4l32pipsvl2837csv9i4e4i2lg.apps.googleusercontent.com"});
   });
 </script>
 </head>
