@@ -15,88 +15,7 @@
 
   <!-- Custom styles for this template -->
   <link href="css/simple-sidebar.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://apis.google.com/js/api.js"></script>
-  
-<script>
-  /**
-   * Sample JavaScript code for speech.speech.recognize
-   * See instructions for running APIs Explorer code samples locally:
-   * https://developers.google.com/explorer-help/guides/code_samples#javascript
-   */
-
-
-  function authenticate() {
-    return gapi.auth2.getAuthInstance()
-        .signIn({scope: "https://www.googleapis.com/auth/cloud-platform"})
-        .then(function() { console.log("Sign-in successful"); },
-              function(err) { console.error("Error signing in", err); });
-  }
-
-
-  function sense(text) {
-        gapi.client.init({
-          'apiKey': '',
-          'discoveryDocs': ['https://language.googleapis.com/$discovery/rest?version=v1beta1']
-        }).then(function() {
-          return gapi.client.language.documents.analyzeSentiment({
-            'document': {
-                      'type': 'PLAIN_TEXT',
-                      'content': text
-                   }
-          });
-        }).then(function(resp) {
-          // send to dataLayer here
-          console.log(resp.result);
-          var r = resp.result.documentSentiment;
-          if (r.score * r.magnitude > 0){
-            $("#imgSense").attr('src','/img/sentiment_very_satisfied-24px.svg');
-          }else{
-            $("#imgSense").attr('src','/img/sentiment_very_dissatisfied-24px.svg');
-          }
-        }, function(reason) {
-          console.log('Error: ' + reason.result.error.message);
-        });
-      };
-     
-
-  function loadClient() {
-    gapi.client.setApiKey("");
-    return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/speech/v1p1beta1/rest")
-        .then(function() { console.log("GAPI client loaded for API"); },
-              function(err) { console.error("Error loading GAPI client for API", err); });
-  } 
-  // Make sure the client is loaded and sign-in is complete before calling this method.
-  function execute(call) {
-    return gapi.client.speech.speech.recognize({
-      "resource": {
-        "config": {
-          "encoding": "LINEAR16",
-          "languageCode": "pt-BR",
-          "sampleRateHertz": 16000
-        },
-        "audio": {
-          "uri": "gs://prevenergycalls/" + call
-        }
-      }
-    })
-        .then(function(response) {
-                // Handle the results here (response.result has the parsed body).
-                console.log("ResponseSpeach", response);
-                text = "";
-                for( let result in response.result.results){
-                    text += response.result.results[result].alternatives[0].transcript;
-                }
-                $('#speach').val(text);
-                gapi.load('client', sense(text));
-                 
-              },
-              function(err) { console.error("Execute error", err); });
-  }
-  gapi.load("client:auth2", function() {
-    gapi.auth2.init({client_id: "332105167058-56k3dq4l32pipsvl2837csv9i4e4i2lg.apps.googleusercontent.com"});
-  });
-</script>
+ 
 </head>
 
 <body>
@@ -130,7 +49,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link"  href="#" onclick="authenticate().then(loadClient);return false;">Login <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Link</a>
@@ -153,15 +72,17 @@
       <div class="container-fluid">
         <h1 class="mt-4">Análise de Satisfação do Cliente</h1>
         <button onclick="authenticate().then(loadClient)">Login</button>
-        <a href="/calls/positivomono3.wav">Ouvir</a>
+        <img src="/img/play_arrow-24px.svg" onclick="play_audio('play','.positivo')">
+        <img src="/img/pause-24px.svg" onclick="play_audio('pause','.positivo')">
          <button onclick="execute('positivomono3.wav')"> Primeira ligação</button>
-         <a href="/calls/negativomono3.wav">Ouvir</a>
+         <img src="/img/play_arrow-24px.svg" onclick="play_audio('play','.negativo')">
+        <img src="/img/pause-24px.svg" onclick="play_audio('pause','.negativo')">
          <button onclick="execute('negativomono3.wav')">Segunda ligação</button>        
       </div>
       <div class="container-fluid">
         <label></label>
         <input type="text" class="form-control" id="speach" style="height: 50px;">
-        <img src="/img/sentiment_satisfied-24px.svg" id="imgSense">
+        <img src="/img/sentiment_satisfied-24px.svg" id="imgSense" style="width: 50px;height: 50px;" >
       </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -172,6 +93,13 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <audio class="positivo" controls preload="none">
+    <source src="calls/positivomono3.wav" type="audio/wav">
+  </audio>
+  <audio class="negativo" controls preload="none">
+    <source src="calls/negativomono3.wav" type="audio/wav">
+  </audio>
 
   <!-- Menu Toggle Script -->
   <script>
@@ -179,6 +107,90 @@
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
     });
+
+
+    $(".positivo").trigger('load');
+    $(".negativo").trigger('load');
+    function play_audio(task,file) {
+      if(task == 'play'){
+           $(file).trigger('play');
+      }
+      if(task == 'stop'){
+           $(file).trigger('pause');
+           $(file).prop("currentTime",0);
+      }
+    }
+
+    function authenticate() {
+      return gapi.auth2.getAuthInstance()
+          .signIn({scope: "https://www.googleapis.com/auth/cloud-platform"})
+          .then(function() { console.log("Sign-in successful"); },
+                function(err) { console.error("Error signing in", err); });
+    }
+
+
+    function sense(text) {
+          gapi.client.init({
+            'apiKey': '',
+            'discoveryDocs': ['https://language.googleapis.com/$discovery/rest?version=v1beta1']
+          }).then(function() {
+            return gapi.client.language.documents.analyzeSentiment({
+              'document': {
+                        'type': 'PLAIN_TEXT',
+                        'content': text
+                    }
+            });
+          }).then(function(resp) {
+            // send to dataLayer here
+            console.log(resp.result);
+            var r = resp.result.documentSentiment;
+            if (r.score * r.magnitude > 0){
+              $("#imgSense").attr('src','/img/sentiment_very_satisfied-24px.svg');
+            }else{
+              $("#imgSense").attr('src','/img/sentiment_very_dissatisfied-24px.svg');
+            }
+          }, function(reason) {
+            console.log('Error: ' + reason.result.error.message);
+          });
+        };
+      
+
+    function loadClient() {
+      gapi.client.setApiKey("");
+      return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/speech/v1p1beta1/rest")
+          .then(function() { console.log("GAPI client loaded for API"); },
+                function(err) { console.error("Error loading GAPI client for API", err); });
+    } 
+    // Make sure the client is loaded and sign-in is complete before calling this method.
+    function execute(call) {
+      return gapi.client.speech.speech.recognize({
+        "resource": {
+          "config": {
+            "encoding": "LINEAR16",
+            "languageCode": "pt-BR",
+            "sampleRateHertz": 16000
+          },
+          "audio": {
+            "uri": "gs://prevenergycalls/" + call
+          }
+        }
+      })
+          .then(function(response) {
+                  // Handle the results here (response.result has the parsed body).
+                  console.log("ResponseSpeach", response);
+                  text = "";
+                  for( let result in response.result.results){
+                      text += response.result.results[result].alternatives[0].transcript;
+                  }
+                  $('#speach').val(text);
+                  gapi.load('client', sense(text));
+                  
+                },
+                function(err) { console.error("Execute error", err); });
+    }
+    gapi.load("client:auth2", function() {
+      gapi.auth2.init({client_id: "332105167058-56k3dq4l32pipsvl2837csv9i4e4i2lg.apps.googleusercontent.com"});
+    });    
   </script>
 
 </body>
