@@ -25,18 +25,41 @@
    * https://developers.google.com/explorer-help/guides/code_samples#javascript
    */
 
+
   function authenticate() {
     return gapi.auth2.getAuthInstance()
         .signIn({scope: "https://www.googleapis.com/auth/cloud-platform"})
         .then(function() { console.log("Sign-in successful"); },
               function(err) { console.error("Error signing in", err); });
   }
+
+
+  function sense(text) {
+        gapi.client.init({
+          'apiKey': '',
+          'discoveryDocs': ['https://language.googleapis.com/$discovery/rest?version=v1beta1']
+        }).then(function() {
+          return gapi.client.language.documents.analyzeSentiment({
+            'document': {
+                      'type': 'PLAIN_TEXT',
+                      'content': text
+                   }
+          });
+        }).then(function(resp) {
+          // send to dataLayer here
+          console.log(resp.result);
+        }, function(reason) {
+          console.log('Error: ' + reason.result.error.message);
+        });
+      };
+     
+
   function loadClient() {
     gapi.client.setApiKey("");
     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/speech/v1p1beta1/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
               function(err) { console.error("Error loading GAPI client for API", err); });
-  }
+  } 
   // Make sure the client is loaded and sign-in is complete before calling this method.
   function execute(call) {
     return gapi.client.speech.speech.recognize({
@@ -59,14 +82,7 @@
                     text += response.result.results[result].alternatives[0].transcript;
                 }
                 $('#speach').val(text);
-                return gapi.client.language.documents.analyzeSentiment({                      
-                      'document': {
-                                'type': 'PLAIN_TEXT',
-                                'content': text
-                            }
-                    }).then(function(response){
-                      console.log("ResponseSense", response);
-                    });
+                gapi.load('client', sense(text));
                  
               },
               function(err) { console.error("Execute error", err); });
