@@ -56,7 +56,7 @@
                 console.log("Response", response);
                 text = "";
                 for( let result in response.result.results){
-                    text += result.alternatives[0].transcript;
+                    text += response.result.results[result].alternatives[0].transcript;
                 }
                 $('#speach').text(text);
               },
