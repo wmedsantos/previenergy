@@ -55,7 +55,7 @@
                 // Handle the results here (response.result has the parsed body).
                 console.log("Response", response);
                 text = "";
-                foreach (result in response.result){
+                for( let result in response.results){
                     text += result.alternatives[0].transcript;
                 }
                 $('#speach').text(text);
