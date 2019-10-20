@@ -48,6 +48,12 @@
         }).then(function(resp) {
           // send to dataLayer here
           console.log(resp.result);
+          var r = resp.result.documentSentiment;
+          if (r.score * r.magnitude > 0){
+            $("#imgSense").attr('src','/img/sentiment_very_satisfied-24px.svg');
+          }else{
+            $("#imgSense").attr('src','/img/sentiment_very_dissatisfied-24px.svg');
+          }
         }, function(reason) {
           console.log('Error: ' + reason.result.error.message);
         });
@@ -155,6 +161,7 @@
       <div class="container-fluid">
         <label></label>
         <input type="text" class="form-control" id="speach" style="height: 50px;">
+        <img src="/img/sentiment_satisfied-24px.svg" id="imgSense">
       </div>
     </div>
     <!-- /#page-content-wrapper -->
